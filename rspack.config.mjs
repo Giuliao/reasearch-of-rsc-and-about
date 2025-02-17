@@ -1,29 +1,14 @@
-import { defineConfig } from '@rspack/cli';
 import path from 'path';
+import { defineConfig } from '@rspack/cli';
+import ReactServerWebPackPlugin from "react-server-dom-webpack/plugin";
 
-export default defineConfig({
-  entry: {
-    server: './src/server.jsx',
-    client: './src/client.jsx'
-  },
-  output: {
-    // 整体的输出目录
-    path: path.resolve(process.cwd(), 'dist'),
-    // 使用函数根据入口名称动态生成输出文件名和路径
-    filename: (pathData) => {
-      if (pathData.chunk.name === 'client') {
-        return path.relative(
-          path.resolve(process.cwd(), 'dist'),
-          path.resolve(process.cwd(), 'public', '[name].js')
-        );
-      }
-      // 其他入口按默认规则输出
-      return '[name].js';
-    }
-  },
-  target: "node",
+export const commonConfig = {
+  // 公共插件、模块规则等
+  mode: 'development',
   optimization: {
-    minimize: false
+    minimize: false,
+     minimizer: [
+    ],
   },
   module: {
     rules: [
@@ -37,15 +22,6 @@ export default defineConfig({
                 syntax: 'ecmascript',
                 jsx: true,
               },
-              transform: {
-                react: {
-                  pragma: 'React.createElement',
-                  pragmaFrag: 'React.Fragment',
-                  throwIfNamespace: true,
-                  development: false,
-                  useBuiltins: false,
-                },
-              },
             },
           },
         },
@@ -53,4 +29,37 @@ export default defineConfig({
       },
     ],
   },
+
+};
+
+
+const clientConfig = defineConfig({
+  entry: {
+    client: "./src/client.jsx"
+  },
+  output: {
+    path: path.resolve(process.cwd(), 'static')
+  },
+  target: "web",
+  resolve: {
+    fallback: {
+      path: false,
+      fs: false
+    }
+  },
+  ...commonConfig,
+})
+
+const serverConfig = defineConfig({
+  entry: {
+    server: './src/server.jsx',
+  },
+  output: {
+    // 整体的输出目录
+    path: path.resolve(process.cwd(), 'dist'),
+  },
+  target: "node",
+  ...commonConfig,
 });
+
+export default [serverConfig, clientConfig];
