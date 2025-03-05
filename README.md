@@ -5,12 +5,12 @@ I' m interested in the internal of NextJS. But it' s pretty difficult for me to 
 
 ## How to do
 
-### Setup complier
+### Setup complier and try hydrate
 
 The logic is very simple, server side renders a react component and streams it to the client. On the client side, React hydrate the html from server. I can write a server easily with Express. The problem is that I have to write JSX on the both server and client side, so there comes how to compile. The solutions I found as following,
 
 1. swc + rollup
-2. rspack and rsbuild
+2. rspack + rsbuild
 3. esbuild + rollup
 
 In my practice, I have tried rspack and rsbuild.
@@ -43,7 +43,16 @@ So the question is __how I can include the server part of code to the App.jsx an
 
 ### Simple RSC
 
-TODO
+I have understood a logic that how to organize html with a sever component.
+
+1. server side return a HTML with a client.js
+2. request server component while the page shows loading with suspense
+3. hydrate the server component with react hydrate, replace the loading.
+
+In this way, there are two merits:
+
+1. decrease the time of FCP(first contentful paint)
+2. loading page progressively
 
 ## Other thoughts
 

@@ -1,21 +1,18 @@
 import React from 'react';
+import { hydrateRoot } from 'react-dom/client';
+import { ServeComp } from './server-comp.jsx';
 
 
-function App() {
-  return (
-    <html>
-      <head>
-        <title>SSR 示例</title>
-      </head>
-      <body>
-        <div id="root">
-          <h1>Hello, 服务端流式渲染!</h1>
-          <p>当前时间: {new Date().toLocaleTimeString()}</p>
-        </div>
-      </body>
-    </html>
-  );
-}
+hydrateRoot(
+  document.getElementById('root'),
+  <div>
+    <h1>Hello, 服务端流式渲染!</h1>
+    <p>当前时间: {new Date().toLocaleTimeString()}</p>
+    <React.Suspense fallback={<div>Loading...</div>}>
+      <ServeComp />
+    </React.Suspense>
+  </div>
+);
 
-export default App;
+
 
